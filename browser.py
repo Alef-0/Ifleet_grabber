@@ -5,6 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pyperclip as pc
+from selenium.webdriver.common.action_chains import ActionChains
 
 import time
 import os
@@ -15,11 +16,17 @@ class elements_dictionary:
     password_text = (By.NAME, "loginPassword-inputEl")
     login_button = (By.ID, "loginButton-btnIconEl")
     taskbar = (By.ID, "taskbar-1031-innerCt")
-    # Checar isso depois
+    # Para abrir outras abas
     configurations = (By.ID, "button-1030-btnInnerEl")
     storage = (By.ID, "menuitem-1025-itemEl")
     menu = (By.ID, "button-1042-btnIconEl")
     backup = (By.XPATH, "//*[text()='Backup']") # Não tem botão, é só um local
+    # Aba de cameras
+    tab_cameras = (By.ID, "splitbutton-1260")
+    cam1_btn = (By.ID, "splitbutton-1274")
+    cam2_btn = (By.ID, "splitbutton-1275")
+    cam3_btn = (By.ID, "splitbutton-1276")
+    cam4_btn = (By.ID, "splitbutton-1277")
 
 
 class dashboard():
@@ -29,7 +36,7 @@ class dashboard():
         # So many options to work °_°
         ie_options.ignore_protected_mode_settings = True
         ie_options.ignore_zoom_level = True
-        # ie_options.ensure_clean_session = True
+        ie_options.ensure_clean_session = True
         # ie_options.persistent_hover = True
         # ie_options.require_window_focus = True
         # ie_options.native_events = False
@@ -43,26 +50,28 @@ class dashboard():
 
         # Creating options
         self.driver = webdriver.Ie(options=ie_options)
-        self.driver.set_page_load_timeout(5)
-        self.waiter : WebDriverWait = WebDriverWait(self.driver, 10)
-
-    def __del__(self): self.driver.quit()
+        self.driver.set_page_load_timeout(60)
+        self.waiter : WebDriverWait = WebDriverWait(self.driver, 60)
 
     def gotosite(self, site): self.driver.get(site)
     
     def maximize(self): self.driver.maximize_window()
-
-    def search_box(self, by_search, name, text):
-            el = self.driver.find_element(by_search, name)
-            pc.copy(text)
-            el.clear()
-            el.send_keys(Keys.CONTROL, 'v')
 
     def wait_element(self, by_search, name):
         self.waiter.until(
              EC.visibility_of_element_located((by_search, name))
         )
 
-    def click_element(self, by_search, name):
+    def search_box(self, by_search, name, text):
+        self.wait_element(by_search, name)
+        pc.copy(text)
+        print("VALUE ON COPY: ", text)
         el = self.driver.find_element(by_search, name)
-        el.click()
+        el.clear()
+        el.send_keys(Keys.CONTROL + 'v')
+            
+
+    def click_element(self, by_search, name):
+        self.wait_element(by_search, name)
+        el = self.driver.find_element(by_search, name)
+        ActionChains(self.driver).move_to_element(el).click().perform()
