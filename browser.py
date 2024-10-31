@@ -10,6 +10,18 @@ import time
 import os
 from os import path
 
+class elements_dictionary:
+    login_text = (By.NAME, "loginUsername-inputEl")
+    password_text = (By.NAME, "loginPassword-inputEl")
+    login_button = (By.ID, "loginButton-btnIconEl")
+    taskbar = (By.ID, "taskbar-1031-innerCt")
+    # Checar isso depois
+    configurations = (By.ID, "button-1030-btnInnerEl")
+    storage = (By.ID, "menuitem-1025-itemEl")
+    menu = (By.ID, "button-1042-btnIconEl")
+    backup = (By.XPATH, "//*[text()='Backup']") # Não tem botão, é só um local
+
+
 class dashboard():
     def __init__(self):
         ie_options = webdriver.IeOptions()

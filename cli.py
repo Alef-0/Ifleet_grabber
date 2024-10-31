@@ -1,31 +1,31 @@
-import browser
+from browser import dashboard, elements_dictionary
 from dotenv import load_dotenv
 from os import getenv
 from time import sleep
 from selenium.webdriver.common.by import By
 
-def access_dashboard(dash : browser.dashboard):
+def access_dashboard(dash : dashboard):
     # Acess the site
-    dash = browser.dashboard()
+    dash = dashboard()
     dash.gotosite(getenv("ADDRESS"))
     # Wait until login is visible
-    dash.wait_element(By.NAME, "loginUsername-inputEl")
+    dash.wait_element(*elements_dictionary.login_text)
     dash.maximize()
-    dash.search_box(By.NAME, "loginUsername-inputEl", getenv("LOGIN"))
-    dash.search_box(By.NAME, "loginPassword-inputEl", getenv("PASSWORD"))
-    dash.click_element(By.ID, "loginButton-btnIconEl")
+    dash.search_box(*elements_dictionary.login_text, getenv("USERNAME"))
+    dash.search_box(*elements_dictionary.password_text, getenv("PASSWORD"))
+    dash.click_element(*elements_dictionary.login_button)
     # Wait until bar is visible?
-    dash.wait_element(By.ID, "taskbar-1031-innerCt")
+    dash.wait_element(*elements_dictionary.taskbar)
     # Open armazenamento
-    dash.click_element(By.ID, "button-1030-btnInnerEl")
-    dash.click_element(By.ID, "menuitem-1025-itemEl")
+    dash.click_element(*elements_dictionary.configurations)
+    dash.click_element(*elements_dictionary.storage)
     # Open Backup
-    dash.click_element(By.ID, "button-1042-btnIconEl")
-    dash.click_element(By.XPATH, "//*[text()='Backup']")
+    dash.click_element(*elements_dictionary.menu)
+    dash.click_element(*elements_dictionary.backup)
     
 
 def main():
-    dash = browser.dashboard()
+    dash = dashboard()
     access_dashboard(dash)
 
 if __name__=='__main__':
